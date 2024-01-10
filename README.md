@@ -1,83 +1,61 @@
-# Ejemplo básico de TS
+# SPRINT 4
 
----
+In this project, the code is organized according to the principles of Hexagonal Architecture.
 
-En este ejemplo básico hay:
+### 📥 Installation
 
-- ESLint
-- Prettier
-- ts-jest
-- nodemon
-- VSCode Debugging
-- Github Actions
-- Pequeño ejemplo de código funcional con import
+To get started, you first need to clone the repository:
 
-La configuración del debugger apunta a src/index.ts como archivo de inicio del proyecto.
-
-Comandos:
-
-Testing:
-
-```sh
-npm run test
+```bash
+git clone https://github.com/WhimsicalRabbit/Sprint4.git
 ```
 
-Ejecuta los tests ignorando los que existan en dist/
+Then, install the project dependencies:
 
-Prettier format:
-
-```sh
-npm run prettier-format
+```bash
+npm install
 ```
 
-Ejecuta manualmente el prettier en el proyecto, recomiendo instalar la extensión prettier y que se autoejecute al guardar.
+### 🏁 How To Start
 
-Watcher:
+To run the server, first build the TypeScript code into JavaScript by running:
 
-```sh
-npm run dev:watcher
-```
-
-Ejecuta nodemon usando src/index.ts como archivo inicial
-
-Dev Run:
-
-```sh
-npm run dev:run
-```
-
-Ejecuta el proyecto sin watcher
-
-Build:
-
-```sh
+```bash
 npm run build
 ```
 
-Transpila el proyecto en dist/
+This will generate the dist directory with the compiled JavaScript files.
 
----
+Then, start the server by running:
 
-## Debugger
-
-en el archivo .vscode/launch.json está la configuración del debugger.
-
-```json
-{
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Lanza debug",
-      "preLaunchTask": "tsc: build - tsconfig.json",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/src/index.ts",
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
-    }
-  ]
-}
+```bash
+npm start
 ```
+
+This will start the server and make it available at http://localhost:9000.
+
+### 🏗️ Scripts
+
+This project comes with several predefined scripts in the package.json file:
+
+`test`: Runs tests using Jest.
+
+`lint`: Runs ESLint to check code quality.
+
+`lint:fix`: Runs ESLint to fix code style issues.
+
+`start:dev`: Starts the watch mode server.
+
+`build`: Removes the ./dist folder and compiles the TypeScript code into JavaScript in the ./dist folder.
+
+`start`: Starts the server using the compiled files in the dist/ folder.
+
+### 📝 Built With
+
+<br>
+
+<div align="center">
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-Runtime-green" alt="Node.js"></a>
+  <a href="https://expressjs.com/"><img src="https://img.shields.io/badge/Express.js-Framework-orange" alt="Express.js"></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-Language-blue?logo=typescript" alt="TypeScript"></a>
+</div>
