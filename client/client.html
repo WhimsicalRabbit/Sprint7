@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lapin Real-Time Chat 🐇</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      display: grid;
+      place-content: center;
+      height: 100vh;
+      padding: 25px 25px 50px 25px;
+      grid-template-rows: 1fr;
+      background-color: #aec6cf;
+    }
+
+    .message {
+      margin-bottom: 10px;
+    }
+
+    .user_input {
+      display: flex;
+      margin-top: 10px
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ffffff;
+      border-radius: 5px 0 0 5px;
+      outline: none;
+    }
+
+    button {
+      width: 100px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #FAEBD7;
+      color: #000;
+      cursor: pointer;
+      outline: none;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    button.join_room:hover {
+      background-color: #2980b9;
+    }
+
+    #chat {
+      background-color:#ffd1dc;
+      border-radius: 4px;
+      overflow-y: scroll;
+      scroll-behavior: smooth;
+      width: 500px;
+      height: 100%;
+      position: relative;
+      
+    }
+
+    #chat::-webkit-scrollbar {
+      width: 12px; 
+    }
+
+    #chat::-webkit-scrollbar-thumb {
+      background-color: #8c8c8c;
+      border-radius: 6px;
+    }
+
+    #chat::-webkit-scrollbar-track {
+      background-color: #e0e0e0; 
+      border-radius: 6px; 
+    }
+    
+    #info>p {
+      padding: .5rem 1rem;
+      background: #ff9999;
+    }
+
+    #message_container>li {
+      padding: .5rem 1rem;
+    }
+
+    #message_container>li:nth-child(odd) {
+      background: #dda0dd;
+    }
+
+  </style>
+</head>
+
+<body>
+  <section id="chat">
+    <p id="info"></p>
+    <p id="message_container"></p>
+  </section>
+  <form id="chat_form" class="user_input">
+    <input type="text" id="message_input" placeholder="Honk to your fellow buns! 🎷🐇" autocomplete="off" />
+    <button type="submit">Honk!</button>
+  </form>
+  <form id="room_form" class="user_input">
+    <input type="text" id="room_input" placeholder="Join a space or whisper! 🗨️🐇" autocomplete="off" />
+    <button id="room_button" class="join_room" type="submit">Binkying!</button>
+  </form>
+
+  <script type="module">
+    import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
+      
+        const socket = io();
+
+        const info = document.getElementById("info");
+        const chatForm = document.getElementById("chat_form");
+        const roomForm = document.getElementById("room_form")
+        const roomInput = document.getElementById("room_input");
+        const messageInput = document.getElementById("message_input");
+        const messages = document.getElementById("message_container");
+        const button = document.getElementById("room_button")
+
+        const displayMessage = (msg, username) => {
+          const item = `<li>${username}: ${msg}</li>`
+          messages.insertAdjacentHTML("beforeend", item)
+        }
+
+        const roomInit = (chat) => {
+          
+          if (chat.length >= 0) {
+            for (let i = 0 ; i < chat.length; i++) {
+              const user = chat[i].user;
+              const text = chat[i].text;
+
+              displayMessage(text, user)
+          }
+          } else {
+            return
+          }
+        }
+
+        socket.on("connect", () => {
+          const username = getCookie("username")
+
+          const welcome = `<p><strong>Welcome rabbit ${username}</br>
+          Private den id: ${socket.id}</strong></p>`;
+
+          info.insertAdjacentHTML("beforeend", welcome);
+
+          roomInput.value = "global";
+          button.click()
+        })
+
+        socket.on("chat_message", (msg, username) => {
+            displayMessage(msg, username);
+        })
+
+        chatForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const username = getCookie("username")
+
+            if (messageInput.value) {
+                displayMessage(messageInput.value, username)
+                socket.emit("chat_message", messageInput.value, roomInput.value, username);
+                messageInput.value = "";
+            }
+        })
+
+        roomForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          const room = roomInput.value;
+
+          if(room) {
+            const item = `<li><strong>You've joined the space: ${roomInput.value}<strong></li>`
+            messages.insertAdjacentHTML("beforeend", item)
+          
+            socket.emit("join_room", room, roomInit);
+          }
+        })
+
+        function getCookie(cname) {
+          let name = cname + "=";
+          let decodedCookie = decodeURIComponent(document.cookie);
+          let ca = decodedCookie.split(';');
+            for(let i = 0; i <ca.length; i++) {
+              let c = ca[i];
+            while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+            }
+          }
+        return "";
+        }
+
+      </script>
+</body>
+
+</html>

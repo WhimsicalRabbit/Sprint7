@@ -10,21 +10,30 @@ export class LoginController {
   ) {}
 
   async run(req: Request, res: Response) {
-    const { body } = req;
-    const newUser = new User(body.username, body.password);
+    try {
+      const { body } = req;
+      const newUser = new User(body.username, body.password);
 
-    if (!body.username)
-      return this.httpResponse.BadRequest(res, `Username needed`);
-    else if (!body.password)
-      return this.httpResponse.BadRequest(res, `Password needed`);
+      if (!body.username)
+        return this.httpResponse.BadRequest(res, `Username needed`);
+      else if (!body.password)
+        return this.httpResponse.BadRequest(res, `Password needed`);
 
-    const user = await this.login.run(newUser);
+      const token = await this.login.run(newUser);
 
-    if (user) return this.httpResponse.Ok(res, `${user}`);
-    else
-      return this.httpResponse.Unauthorized(
-        res,
-        `Username or password is not correct`
-      );
+      if (!token) {
+        return this.httpResponse.Unauthorized(
+          res,
+          `Username or password is not correct`
+        );
+      } else {
+        res.cookie("username", body.username);
+        res.cookie("token", token);
+
+        return res.redirect("/chat");
+      }
+    } catch (err) {
+      return this.httpResponse.Error(res, err);
+    }
   }
 }

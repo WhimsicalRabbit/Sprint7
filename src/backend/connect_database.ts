@@ -15,7 +15,7 @@ const mongoConnection = async (mongoUrl: string): Promise<void> => {
       dbName: "app"
     });
 
-    console.log("Connected to MongoDB...");
+    console.log("Connection stablished with MongoDB 🌿🐇");
   } catch (err) {
     if (err instanceof Error) {
       console.error(err.message);

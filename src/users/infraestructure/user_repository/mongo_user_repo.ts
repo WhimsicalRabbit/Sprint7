@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
 import { UserRepo } from "../../domain/user_repo";
 import { User } from "../../domain/users";
 import { userModel } from "../schemas/user_schema";
 import bcrypt from "bcrypt";
+import * as jwt from "jsonwebtoken";
 
 export class MongoUserRepo implements UserRepo {
   async register(user: User): Promise<string | null> {
@@ -25,7 +25,7 @@ export class MongoUserRepo implements UserRepo {
     }
   }
 
-  async login(user: User): Promise<boolean> {
+  async login(user: User): Promise<string | null> {
     const { username, password } = user;
     new userModel({
       username: username,
@@ -33,14 +33,24 @@ export class MongoUserRepo implements UserRepo {
     });
 
     const profile = await userModel.findOne({ username });
-    const check =
-      // eslint-disable-next-line no-ternary
-      profile == null
-        ? false
-        : await bcrypt.compare(password, profile!.password);
 
-    console.log(check);
+    if (!profile) {
+      return null;
+    }
 
-    return check;
+    const check = await bcrypt.compare(password, profile!.password);
+
+    if (!check) {
+      return null;
+    }
+
+    const userForToken = {
+      id: profile._id,
+      username: profile.username
+    };
+
+    const token = jwt.sign(userForToken, process.env.SECRET!);
+
+    return token;
   }
 }
