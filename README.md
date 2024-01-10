@@ -1,4 +1,4 @@
-# SPRINT 4
+# SPRINT 7
 
 In this project, the code is organized according to the principles of Hexagonal Architecture.
 
@@ -7,7 +7,7 @@ In this project, the code is organized according to the principles of Hexagonal 
 To get started, you first need to clone the repository:
 
 ```bash
-git clone https://github.com/WhimsicalRabbit/Sprint4.git
+git clone https://github.com/WhimsicalRabbit/Sprint7.git
 ```
 
 Then, install the project dependencies:
@@ -40,11 +40,11 @@ This project comes with several predefined scripts in the package.json file:
 
 `test`: Runs tests using Jest.
 
-`lint`: Runs ESLint to check code quality.
+`prettier-format`: Runs prettier to check code quality.
 
-`lint:fix`: Runs ESLint to fix code style issues.
+`dev:watcher`: Starts the watch mode server.
 
-`start:dev`: Starts the watch mode server.
+`dev`: Starts the server.
 
 `build`: Removes the ./dist folder and compiles the TypeScript code into JavaScript in the ./dist folder.
 
@@ -57,5 +57,6 @@ This project comes with several predefined scripts in the package.json file:
 <div align="center">
   <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-Runtime-green" alt="Node.js"></a>
   <a href="https://expressjs.com/"><img src="https://img.shields.io/badge/Express.js-Framework-orange" alt="Express.js"></a>
+  <a href="https://socket.io/"><img src="https://img.shields.io/badge/Socket.io-Framework-orange" alt="Socket.io"></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-Language-blue?logo=typescript" alt="TypeScript"></a>
 </div>
